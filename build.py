@@ -427,7 +427,7 @@ if __name__ == '__main__':
         os.environ['PRODUCT_NAME'] = 'XCP-ng Server'
 
     if 'OBJECT_PREFIX' not in os.environ.keys():
-        os.environ['OBJECT_PREFIX'] = 'XenProject'
+        os.environ['OBJECT_PREFIX'] = 'XCPng'
 
     if 'REG_KEY_NAME' not in os.environ.keys():
         os.environ['REG_KEY_NAME'] = 'Windows PV Drivers'

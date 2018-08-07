@@ -178,17 +178,17 @@ def shell(command, dir):
     print(dir)
     print(command)
     sys.stdout.flush()
-    
-    sub = subprocess.Popen(' '.join(command), cwd=dir,
-                           stdout=subprocess.PIPE,
-                           stderr=subprocess.STDOUT)
+	
+    with subprocess.Popen(command, shell=True, cwd=dir, stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE) as p:
+        output, errors = p.communicate()
+    lines = output.splitlines()
 
-    for line in sub.stdout:
-        print(line.decode(sys.getdefaultencoding()).rstrip())
+    for line in lines:
+        print(line.rstrip())
 
-    sub.wait()
-
-    return sub.returncode
+    p.wait()	
+		
+    return p.returncode	
 
 
 def find(name, path):
@@ -206,6 +206,7 @@ class msbuild_failure(Exception):
 
 def msbuild(platform, configuration, target, file, args, dir):
     vcvarsall = find('vcvarsall.bat', os.environ['VS'])
+    vcvarsall = "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsall.bat"
 
     os.environ['MSBUILD_PLATFORM'] = platform
     os.environ['MSBUILD_CONFIGURATION'] = configuration
@@ -395,8 +396,8 @@ def getVsVersion():
             continue
         vsenv[k] = v
 
-    mapping = { '14.0':'vs2015',
-                '15.0':'vs2017'}
+    mapping = { '13.0':'vs2015',
+                '14.0':'vs2017'}
 
     return mapping[vsenv['VisualStudioVersion']]
 
